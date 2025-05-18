@@ -2,8 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function NavBar() {
-  const navigate = useNavigate();
   const { auth, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
@@ -25,9 +25,18 @@ function NavBar() {
         <>
           <Link to="/forum" style={{ marginRight: '1rem' }}>Forum</Link>
           <Link to="/profile" style={{ marginRight: '1rem' }}>Profil</Link>
-          {auth.role === "admin" && <Link to="/admin">Admin</Link>}
+          {auth.role === "admin" && (
+            <Link to="/admin" style={{ marginRight: '1rem' }}>Admin</Link>
+          )}
 
-          <span style={{ marginLeft: '2rem', marginRight: '1rem' }}>
+          {auth.avatar && (
+            <img
+              src={`http://localhost:5000${auth.avatar}`}
+              alt="avatar"
+              style={{ width: 30, height: 30, borderRadius: '50%', verticalAlign: 'middle', marginRight: '0.5rem' }}
+            />
+          )}
+          <span style={{ marginRight: '1rem' }}>
             Bienvenue {auth.username}
           </span>
           <button onClick={handleLogout}>Se déconnecter</button>

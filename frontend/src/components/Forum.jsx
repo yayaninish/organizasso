@@ -21,7 +21,7 @@ function Forum() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="container">
       <h2>Forum public</h2>
       {error && <p>{error}</p>}
 

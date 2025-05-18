@@ -1,18 +1,19 @@
 import MessageForm from '../MessageForm';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 function MessageItem({ message, replies, onRefresh, isReply = false }) {
   const [replying, setReplying] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
-  const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('userId');
+
+  const { auth } = useAuth();
 
   const handleDelete = async () => {
     if (!window.confirm("Supprimer ce message ?")) return;
     await fetch(`http://localhost:5000/messages/${message._id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${auth.token}` }
     });
     onRefresh();
   };
@@ -22,7 +23,7 @@ function MessageItem({ message, replies, onRefresh, isReply = false }) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${auth.token}`
       },
       body: JSON.stringify({ content: editContent })
     });
@@ -32,53 +33,55 @@ function MessageItem({ message, replies, onRefresh, isReply = false }) {
 
   return (
     <li style={{ marginBottom: '1rem', marginLeft: isReply ? '2rem' : 0 }}>
-      {editing ? (
-        <>
-          <textarea
-            value={editContent}
-            onChange={e => setEditContent(e.target.value)}
-            rows="2"
-            cols="50"
-          /><br />
-          <button onClick={handleEdit}>Valider</button>
-          <button onClick={() => setEditing(false)} style={{ marginLeft: '1rem' }}>Annuler</button>
-        </>
-      ) : (
-        <>
-          <strong>{message.author?.username || "?"} :</strong> {message.content}<br />
-          <small>{new Date(message.createdAt).toLocaleString()}</small><br />
-          {message.author?._id === userId && (
-            <>
-              <button onClick={() => setReplying(!replying)}>Répondre</button>
-              <button onClick={() => setEditing(true)} style={{ marginLeft: '1rem' }}>Modifier</button>
-              <button onClick={handleDelete} style={{ marginLeft: '1rem' }}>Supprimer</button>
-            </>
-          )}
-        </>
-      )}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    {message.author?.avatar && (
+      <img
+        src={`http://localhost:5000${message.author.avatar}`}
+        alt="avatar"
+        style={{
+          width: 30,
+          height: 30,
+          borderRadius: '50%',
+          objectFit: 'cover'
+        }}
+      />
+    )}
+    <strong>{message.author?.username || "?"}</strong>
+  </div>
 
-      {replying && (
-        <MessageForm parentId={message._id} onPost={() => {
-          setReplying(false);
-          onRefresh();
-        }} />
-      )}
+  <p style={{ margin: '0.5rem 0' }}>{message.content}</p>
+  <small>{new Date(message.createdAt).toLocaleString()}</small><br />
+    <button onClick={() => setReplying(!replying)}>Répondre</button>
+  {message.author?._id === auth.userId && (
+    <>
+      <button onClick={() => setEditing(true)} style={{ marginLeft: '0.5rem' }}>Modifier</button>
+      <button onClick={handleDelete} style={{ marginLeft: '0.5rem' }}>Supprimer</button>
+    </>
+  )}
 
-      {/* Réponses */}
-      {replies && replies.length > 0 && (
-        <ul>
-          {replies.map(reply => (
-            <MessageItem
-              key={reply._id}
-              message={reply}
-              replies={[]}
-              onRefresh={onRefresh}
-              isReply={true}
-            />
-          ))}
-        </ul>
-      )}
-    </li>
+  {replying && (
+    <MessageForm parentId={message._id} onPost={() => {
+      setReplying(false);
+      onRefresh();
+    }} />
+  )}
+
+  {replies && replies.length > 0 && (
+    <ul>
+      {replies.map(reply => (
+        <MessageItem
+          key={reply._id}
+          message={reply}
+          replies={[]}
+          onRefresh={onRefresh}
+          isReply={true}
+        />
+      ))}
+    </ul>
+  )}
+</li>
+
+
   );
 }
 

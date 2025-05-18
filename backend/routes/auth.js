@@ -49,11 +49,12 @@ router.post("/login", async (req, res) => {
     );
 
     res.json({
-      token,
-      username: user.username,
-      role: user.role,
-      userId: user._id // 👈 nécessaire pour suppression
-    });
+        token,
+        username: user.username,
+        role: user.role,
+        userId: user._id,
+        avatar: user.avatar || ""
+        });
   } catch (err) {
     res.status(500).json("Erreur serveur lors de la connexion.");
   }

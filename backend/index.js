@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const messageRoutes = require("./routes/message");
 const profileRoutes = require("./routes/profile");
+const uploadRoutes = require("./routes/upload");
 
 const app = express();
 const PORT = 5000;
@@ -13,12 +14,17 @@ const PORT = 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+
 
 // Routes
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/messages", messageRoutes);
 app.use("/profile", profileRoutes);
+app.use("/upload", uploadRoutes);
+
+
 
 // Route de test
 app.get("/", (req, res) => {

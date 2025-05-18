@@ -38,15 +38,15 @@ router.post("/", isAuthenticated, async (req, res) => {
 
 // 🔽 Afficher les messages publics
 router.get("/", async (req, res) => {
-  try {
-    const messages = await Message.find({ isPrivate: false })
-      .sort({ createdAt: -1 })
-      .populate("author", "username"); // pour afficher le pseudo
-    res.json(messages);
-  } catch (err) {
-    res.status(500).json("Erreur serveur");
-  }
+  const messages = await Message.find({ isPrivate: false })
+    .sort({ createdAt: -1 })
+    .populate("author", "username avatar");
+
+  console.log(messages[0]); // 👈 important
+
+  res.json(messages);
 });
+
 
 // 🔥 Supprimer un message (auteur uniquement)
 router.delete("/:id", isAuthenticated, async (req, res) => {

@@ -7,18 +7,19 @@ export function AuthProvider({ children }) {
     username: null,
     token: null,
     role: null,
-    userId: null
+    userId: null,
+    avatar: null
   });
 
   useEffect(() => {
-    // au chargement : relire les infos du localStorage
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
     const userId = localStorage.getItem("userId");
+    const avatar = localStorage.getItem("avatar");
 
     if (token && username) {
-      setAuth({ token, username, role, userId });
+      setAuth({ token, username, role, userId, avatar });
     }
   }, []);
 
@@ -27,13 +28,14 @@ export function AuthProvider({ children }) {
     localStorage.setItem("username", data.username);
     localStorage.setItem("role", data.role);
     localStorage.setItem("userId", data.userId);
+    localStorage.setItem("avatar", data.avatar || "");
 
     setAuth(data);
   };
 
   const logout = () => {
     localStorage.clear();
-    setAuth({ username: null, token: null, role: null, userId: null });
+    setAuth({ username: null, token: null, role: null, userId: null, avatar: null });
   };
 
   return (
@@ -43,7 +45,6 @@ export function AuthProvider({ children }) {
   );
 }
 
-// hook d'accès
 export function useAuth() {
   return useContext(AuthContext);
 }
