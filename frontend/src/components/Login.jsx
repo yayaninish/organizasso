@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ function Login() {
       });
 
       const { token, username: name, role, userId } = res.data;
+      login({ token, username, role, userId });
 
       // Stocke les infos
       localStorage.setItem('token', token);

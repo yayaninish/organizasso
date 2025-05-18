@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
 import Home from './Home';
 import Register from './Register';
-import Login from './Login';
-import Forum from './Forum';
+import Login from './components/Login';
+import Forum from './components/Forum';
+import Profile from './components/Profile';
 import Admin from './Admin';
-import ProtectedRoute from './ProtectedRoute';
-import Profile from './Profile';
-
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -14,17 +14,8 @@ function App() {
       <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
         <h1>Organiz'asso</h1>
 
-        {/* Barre de navigation */}
-        <nav style={{ marginBottom: '1rem' }}>
-          <Link to="/" style={{ marginRight: '1rem' }}>Accueil</Link>
-          <Link to="/register" style={{ marginRight: '1rem' }}>Inscription</Link>
-          <Link to="/login" style={{ marginRight: '1rem' }}>Connexion</Link>
-          <Link to="/forum" style={{ marginRight: '1rem' }}>Forum</Link>
-          <Link to="/profile" style={{ marginRight: '1rem' }}>Profil</Link>
-          <Link to="/admin">Admin</Link>
-        </nav>
+        <NavBar />
 
-        {/* Système de routes */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -38,20 +29,11 @@ function App() {
             }
           />
           <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
-
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
+            <ProtectedRoute><Profile /></ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute><Admin /></ProtectedRoute>
+          } />
         </Routes>
       </div>
     </Router>
