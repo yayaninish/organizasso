@@ -5,6 +5,8 @@ import Login from './Login';
 import Forum from './Forum';
 import Admin from './Admin';
 import ProtectedRoute from './ProtectedRoute';
+import Profile from './Profile';
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
           <Link to="/register" style={{ marginRight: '1rem' }}>Inscription</Link>
           <Link to="/login" style={{ marginRight: '1rem' }}>Connexion</Link>
           <Link to="/forum" style={{ marginRight: '1rem' }}>Forum</Link>
+          <Link to="/profile" style={{ marginRight: '1rem' }}>Profil</Link>
           <Link to="/admin">Admin</Link>
         </nav>
 
@@ -34,6 +37,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+
           <Route
             path="/admin"
             element={

@@ -15,12 +15,15 @@ function Login() {
         password
       });
 
-      const { token, role } = res.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('username', username);
-      localStorage.setItem('role', role);
+      const { token, username: name, role, userId } = res.data;
 
-      setMessage(`Bienvenue ${username} !`);
+      // Stocke les infos
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', name);
+      localStorage.setItem('role', role);
+      localStorage.setItem('userId', userId); // nécessaire pour la suppression
+
+      setMessage(`Bienvenue ${name} !`);
       setUsername('');
       setPassword('');
     } catch (err) {

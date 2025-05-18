@@ -4,23 +4,18 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const router = express.Router();
-
-// À mettre dans un .env plus tard
 const JWT_SECRET = "organiz_secret";
 
-// ✅ Inscription
+// 🔐 Inscription
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Vérifie si le pseudo est déjà pris
     const existingUser = await User.findOne({ username });
     if (existingUser) return res.status(400).json("Pseudo déjà utilisé.");
 
-    // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Création du nouvel utilisateur
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -53,7 +48,12 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, username: user.username, role: user.role });
+    res.json({
+      token,
+      username: user.username,
+      role: user.role,
+      userId: user._id // 👈 nécessaire pour suppression
+    });
   } catch (err) {
     res.status(500).json("Erreur serveur lors de la connexion.");
   }
