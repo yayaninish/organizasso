@@ -1,4 +1,4 @@
-import MessageForm from '../MessageForm';
+import MessageForm from './MessageForm';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
@@ -60,10 +60,15 @@ function MessageItem({ message, replies, onRefresh, isReply = false }) {
   )}
 
   {replying && (
-    <MessageForm parentId={message._id} onPost={() => {
-      setReplying(false);
-      onRefresh();
-    }} />
+    <MessageForm
+  parentId={message._id}
+  onPost={() => {
+    setReplying(false);
+    onRefresh();
+  }}
+  isPrivate={message.isPrivate}
+/>
+
   )}
 
   {replies && replies.length > 0 && (

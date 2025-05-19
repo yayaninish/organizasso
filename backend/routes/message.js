@@ -5,85 +5,89 @@ const Message = require("../models/Message");
 const router = express.Router();
 const JWT_SECRET = "organiz_secret";
 
-// Middleware pour récupérer l'utilisateur à partir du token
+// Middleware d'authentification
 function isAuthenticated(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json("Token manquant");
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // contient id et role
+    req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json("Token invalide");
+    res.status(401).json("Token invalide");
   }
 }
 
-// 📬 Poster un message
+// 📥 Créer un message
 router.post("/", isAuthenticated, async (req, res) => {
-  const { content, parentId, isPrivate } = req.body;
-
-  if (!content) return res.status(400).json("Message vide");
-
-  const message = new Message({
-    content,
-    author: req.user.id,
-    parentId: parentId || null,
-    isPrivate: isPrivate || false
-  });
-
-  await message.save();
-  res.status(201).json("Message publié !");
-});
-
-// 🔽 Afficher les messages publics
-router.get("/", async (req, res) => {
-  const messages = await Message.find({ isPrivate: false })
-    .sort({ createdAt: -1 })
-    .populate("author", "username avatar");
-
-  console.log(messages[0]); // 👈 important
-
-  res.json(messages);
-});
-
-
-// 🔥 Supprimer un message (auteur uniquement)
-router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
-    const message = await Message.findById(req.params.id);
-    if (!message) return res.status(404).json("Message non trouvé");
+    const { content, parentId = null, isPrivate = false } = req.body;
 
-    // Vérifie que l'utilisateur est l'auteur
-    if (message.author.toString() !== req.user.id) {
-      return res.status(403).json("Action interdite");
-    }
+    const message = new Message({
+      content,
+      parentId,
+      isPrivate,
+      author: req.user.id
+    });
 
-    await Message.findByIdAndDelete(req.params.id);
-    res.json("Message supprimé !");
+    await message.save();
+    res.status(201).json(message);
   } catch (err) {
+    res.status(500).json("Erreur lors de l’envoi du message.");
+  }
+});
+
+// 📤 Lire les messages publics ou privés
+router.get("/", async (req, res) => {
+  try {
+    const isPrivate = req.query.private === "true";
+    const filter = isPrivate ? { isPrivate: true } : { isPrivate: false };
+
+    const messages = await Message.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("author", "username avatar");
+
+    res.json(messages);
+  } catch (err) {
+    console.error(err); // 👈 ajoute ce log côté serveur
     res.status(500).json("Erreur serveur");
   }
 });
 
-//  Modifier un message (auteur uniquement)
+
+// ✏️ Modifier un message
 router.put("/:id", isAuthenticated, async (req, res) => {
-  const { content } = req.body;
-  if (!content) return res.status(400).json("Contenu requis");
+  try {
+    const message = await Message.findById(req.params.id);
+    if (!message) return res.status(404).json("Message introuvable");
 
-  const message = await Message.findById(req.params.id);
-  if (!message) return res.status(404).json("Message introuvable");
+    if (message.author.toString() !== req.user.id)
+      return res.status(403).json("Non autorisé");
 
-  if (message.author.toString() !== req.user.id) {
-    return res.status(403).json("Non autorisé à modifier ce message");
+    message.content = req.body.content;
+    await message.save();
+
+    res.json(message);
+  } catch (err) {
+    res.status(500).json("Erreur lors de la modification.");
   }
-
-  message.content = content;
-  await message.save();
-
-  res.json("Message mis à jour");
 });
 
+// ❌ Supprimer un message
+router.delete("/:id", isAuthenticated, async (req, res) => {
+  try {
+    const message = await Message.findById(req.params.id);
+    if (!message) return res.status(404).json("Message introuvable");
 
+    if (message.author.toString() !== req.user.id)
+      return res.status(403).json("Non autorisé");
+
+    await message.deleteOne();
+    res.json("Message supprimé");
+  } catch (err) {
+    res.status(500).json("Erreur lors de la suppression.");
+  }
+});
 
 module.exports = router;

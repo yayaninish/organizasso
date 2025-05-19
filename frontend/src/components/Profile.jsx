@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import MessageForm from '../MessageForm';
+import MessageForm from './MessageForm';
 import MessageList from './MessageList';
 import { useAuth } from '../context/AuthContext';
 

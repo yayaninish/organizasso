@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import MessageForm from '../MessageForm';
+import MessageForm from './MessageForm';
 import MessageList from './MessageList';
 
 function Forum() {

@@ -7,6 +7,9 @@ import Forum from './components/Forum';
 import Profile from './components/Profile';
 import Admin from './Admin';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import AdminForum from './components/AdminForum';
+
 import './App.css';
 
 
@@ -30,6 +33,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin-forum"
+            element={
+              <AdminRoute>
+                <AdminForum />
+              </AdminRoute>
+            }
+          />
+
           <Route path="/profile" element={
             <ProtectedRoute><Profile /></ProtectedRoute>
           } />

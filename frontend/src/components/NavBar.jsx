@@ -25,15 +25,26 @@ function NavBar() {
         <>
           <Link to="/forum" style={{ marginRight: '1rem' }}>Forum</Link>
           <Link to="/profile" style={{ marginRight: '1rem' }}>Profil</Link>
+
           {auth.role === "admin" && (
-            <Link to="/admin" style={{ marginRight: '1rem' }}>Admin</Link>
+            <>
+              <Link to="/admin" style={{ marginRight: '1rem' }}>Panel Admin</Link>
+              <Link to="/admin-forum" style={{ marginRight: '1rem' }}>Forum Admin</Link>
+            </>
           )}
 
           {auth.avatar && (
             <img
               src={`http://localhost:5000${auth.avatar}`}
               alt="avatar"
-              style={{ width: 30, height: 30, borderRadius: '50%', verticalAlign: 'middle', marginRight: '0.5rem' }}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                verticalAlign: 'middle',
+                marginRight: '0.5rem'
+              }}
             />
           )}
           <span style={{ marginRight: '1rem' }}>
