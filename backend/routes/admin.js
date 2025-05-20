@@ -41,4 +41,35 @@ router.put("/validate/:id", isAdmin, async (req, res) => {
   res.json("Utilisateur validé !");
 });
 
+// 🔧 Modifier le rôle d’un autre utilisateur (admin uniquement, sauf soi-même)
+router.put("/role/:id", isAdmin, async (req, res) => {
+  const { role } = req.body;
+  const { id } = req.params;
+
+  if (!["admin", "membre"].includes(role)) {
+    return res.status(400).json("Rôle invalide");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json("ID invalide");
+  }
+
+  // 🛑 Empêche de se modifier soi-même
+  if (req.user.id === id) {
+    return res.status(400).json("Tu ne peux pas modifier ton propre rôle");
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json("Utilisateur introuvable");
+
+    user.role = role;
+    await user.save();
+
+    res.json({ message: "Rôle mis à jour", user });
+  } catch (err) {
+    res.status(500).json("Erreur serveur");
+  }
+});
+
 module.exports = router;

@@ -5,7 +5,7 @@ import Register from './Register';
 import Login from './components/Login';
 import Forum from './components/Forum';
 import Profile from './components/Profile';
-import Admin from './Admin';
+import Admin from './components/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import AdminForum from './components/AdminForum';
