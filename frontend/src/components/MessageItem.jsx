@@ -46,7 +46,12 @@ function MessageItem({ message, replies, onRefresh, isReply = false }) {
         }}
       />
     )}
-    <strong>{message.author?.username || "?"}</strong>
+    <strong>
+  <a href={`/user/${message.author?._id}`} style={{ textDecoration: 'none' }}>
+    {message.author?.username || "?"}
+  </a>
+</strong>
+
   </div>
 
   <p style={{ margin: '0.5rem 0' }}>{message.content}</p>

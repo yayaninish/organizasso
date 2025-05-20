@@ -7,6 +7,7 @@ const adminRoutes = require("./routes/admin");
 const messageRoutes = require("./routes/message");
 const profileRoutes = require("./routes/profile");
 const uploadRoutes = require("./routes/upload");
+const userRoutes = require("./routes/users");
 
 const app = express();
 const PORT = 5000;
@@ -23,6 +24,7 @@ app.use("/admin", adminRoutes);
 app.use("/messages", messageRoutes);
 app.use("/profile", profileRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/users", userRoutes);
 
 
 

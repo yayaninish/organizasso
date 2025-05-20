@@ -9,6 +9,7 @@ import Admin from './Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import AdminForum from './components/AdminForum';
+import UserProfile from './components/UserProfile';
 
 import './App.css';
 
@@ -48,6 +49,7 @@ function App() {
           <Route path="/admin" element={
             <ProtectedRoute><Admin /></ProtectedRoute>
           } />
+          <Route path="/user/:id" element={<UserProfile />} />
         </Routes>
       </div>
     </Router>
