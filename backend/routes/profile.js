@@ -23,7 +23,8 @@ function isAuthenticated(req, res, next) {
 // 🔍 Profil utilisateur connecté
 router.get("/", isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("username role");
+    const user = await User.findById(req.user.id).select("username role avatar");
+
     const messages = await Message.find({ author: req.user.id })
   .sort({ createdAt: -1 })
   .populate("author", "username avatar"); // <-- ici aussi

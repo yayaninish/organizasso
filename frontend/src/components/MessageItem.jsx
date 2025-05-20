@@ -1,6 +1,8 @@
 import MessageForm from './MessageForm';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+
 
 function MessageItem({ message, replies, onRefresh, isReply = false }) {
   const [replying, setReplying] = useState(false);
@@ -47,9 +49,16 @@ function MessageItem({ message, replies, onRefresh, isReply = false }) {
       />
     )}
     <strong>
-  <a href={`/user/${message.author?._id}`} style={{ textDecoration: 'none' }}>
-    {message.author?.username || "?"}
-  </a>
+      <Link
+      to={
+        message.author?._id === auth.userId
+          ? "/profile"
+          : `/user/${message.author?._id}`
+      }
+      style={{ textDecoration: 'none' }}
+    >
+      {message.author?.username}
+    </Link>
 </strong>
 
   </div>
