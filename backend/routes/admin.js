@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const JWT_SECRET = "organiz_secret"; // à mettre dans un .env en prod
 
-// Middleware : vérifie si l'utilisateur est un admin
+// vérifie si l'utilisateur est un admin
 function isAdmin(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json("Token manquant");
@@ -21,13 +21,13 @@ function isAdmin(req, res, next) {
   }
 }
 
-// 🔍 Lister les utilisateurs non validés
+// Lister les utilisateurs non validés
 router.get("/pending", isAdmin, async (req, res) => {
   const users = await User.find({ validated: false }, "username role");
   res.json(users);
 });
 
-// ✅ Valider un utilisateur par ID
+// Valider un utilisateur par ID
 router.put("/validate/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
 
@@ -41,7 +41,7 @@ router.put("/validate/:id", isAdmin, async (req, res) => {
   res.json("Utilisateur validé !");
 });
 
-// 🔧 Modifier le rôle d’un autre utilisateur (admin uniquement, sauf soi-même)
+// Modifier le rôle d’un autre utilisateur (admin uniquement, sauf soi-même)
 router.put("/role/:id", isAdmin, async (req, res) => {
   const { role } = req.body;
   const { id } = req.params;
@@ -54,7 +54,7 @@ router.put("/role/:id", isAdmin, async (req, res) => {
     return res.status(400).json("ID invalide");
   }
 
-  // 🛑 Empêche de se modifier soi-même
+  // Empêche de se modifier soi-même
   if (req.user.id === id) {
     return res.status(400).json("Tu ne peux pas modifier ton propre rôle");
   }

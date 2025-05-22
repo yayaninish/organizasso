@@ -41,7 +41,7 @@ function Profile() {
 
       const data = await res.json();
 
-      // 🔁 met à jour auth + recharge les données à jour
+      // met à jour auth + recharge les données à jour
       login({ ...auth, avatar: data.avatar });
       await fetchProfile(); // recharge le user mis à jour
     } catch {

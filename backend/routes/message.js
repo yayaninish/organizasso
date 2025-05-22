@@ -5,7 +5,7 @@ const Message = require("../models/Message");
 const router = express.Router();
 const JWT_SECRET = "organiz_secret";
 
-// Middleware d'authentification
+// fonction d'authentification
 function isAuthenticated(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json("Token manquant");
@@ -19,7 +19,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-// 📥 Créer un message
+// Créer un message
 router.post("/", isAuthenticated, async (req, res) => {
   try {
     const { content, parentId = null, isPrivate = false } = req.body;
@@ -38,7 +38,7 @@ router.post("/", isAuthenticated, async (req, res) => {
   }
 });
 
-// 📤 Lire les messages publics ou privés
+// Lire les messages publics ou privés
 router.get("/", async (req, res) => {
   try {
     const isPrivate = req.query.private === "true";
@@ -50,13 +50,13 @@ router.get("/", async (req, res) => {
 
     res.json(messages);
   } catch (err) {
-    console.error(err); // 👈 ajoute ce log côté serveur
+    console.error(err);
     res.status(500).json("Erreur serveur");
   }
 });
 
 
-// ✏️ Modifier un message
+// Modifier un message
 router.put("/:id", isAuthenticated, async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
@@ -74,7 +74,7 @@ router.put("/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-// ❌ Supprimer un message
+// Supprimer un message
 router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);

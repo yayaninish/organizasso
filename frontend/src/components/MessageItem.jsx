@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import MessageForm from './MessageForm';
 import { Link } from 'react-router-dom';
 
-
 function MessageItem({ message, replies, onRefresh }) {
   const { auth } = useAuth();
   const [replying, setReplying] = useState(false);
@@ -48,76 +47,76 @@ function MessageItem({ message, replies, onRefresh }) {
   };
 
   return (
-    <li style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.3rem' }}>
-        {message.author?.avatar && (
-          <img
-            src={`http://localhost:5000${message.author.avatar}`}
-            alt="avatar"
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: '50%',
-              objectFit: 'cover',
-              marginRight: '0.5rem'
-            }}
-          />
-        )}
-        <strong>
-          <Link
-  to={message.author?._id === auth.userId ? "/profile" : `/user/${message.author?._id}`}
-  style={{ textDecoration: 'none', fontWeight: 'bold' }}
->
-  {message.author?.username || "?"}
-</Link>
-
-        </strong>
-      </div>
-
-      {editing ? (
-        <>
-          <textarea
-            rows="3"
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            style={{ width: '100%' }}
-          />
-          <button onClick={handleEdit}>Valider</button>
-          <button onClick={() => setEditing(false)} style={{ marginLeft: '1rem' }}>Annuler</button>
-        </>
-      ) : (
-        <p>{message.content}</p>
-      )}
-
-      <div style={{ marginTop: '0.5rem' }}>
-        <button onClick={() => setReplying(!replying)}>Répondre</button>
-
-        {message.author?._id === auth.userId && (
-          <>
-            <button onClick={() => setEditing(true)} style={{ marginLeft: '1rem' }}>Modifier</button>
-            <button onClick={handleDelete} style={{ marginLeft: '1rem' }}>Supprimer</button>
-          </>
-        )}
-      </div>
-
-      {replying && (
-        <MessageForm
-          parentId={message._id}
-          onPost={() => {
-            setReplying(false);
-            onRefresh();
-          }}
-          isPrivate={message.isPrivate}
+    <li className="message-card">
+      {message.author?.avatar && (
+        <img
+          className="message-avatar"
+          src={`http://localhost:5000${message.author.avatar}`}
+          alt="avatar"
         />
       )}
 
-      {replies?.length > 0 && (
-        <ul style={{ marginTop: '1rem', paddingLeft: '1.5rem', borderLeft: '2px solid #ddd' }}>
-          {replies.map((reply) => (
-            <MessageItem key={reply._id} message={reply} replies={[]} onRefresh={onRefresh} />
-          ))}
-        </ul>
-      )}
+      <div className="message-body">
+        <strong>
+          <Link
+            to={
+              message.author?._id === auth.userId
+                ? "/profile"
+                : `/user/${message.author?._id}`
+            }
+            style={{ textDecoration: 'none' }}
+          >
+            {message.author?.username || "?"}
+          </Link>
+        </strong>
+
+        {editing ? (
+          <>
+            <textarea
+              rows="3"
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              style={{ width: '100%' }}
+            />
+            <div className="message-actions">
+              <button onClick={handleEdit}>Valider</button>
+              <button onClick={() => setEditing(false)}>Annuler</button>
+            </div>
+          </>
+        ) : (
+          <p>{message.content}</p>
+        )}
+
+        <div className="message-actions">
+          <button onClick={() => setReplying(!replying)}>Répondre</button>
+
+          {message.author?._id === auth.userId && (
+            <>
+              <button onClick={() => setEditing(true)}>Modifier</button>
+              <button onClick={handleDelete}>Supprimer</button>
+            </>
+          )}
+        </div>
+
+        {replying && (
+          <MessageForm
+            parentId={message._id}
+            onPost={() => {
+              setReplying(false);
+              onRefresh();
+            }}
+            isPrivate={message.isPrivate}
+          />
+        )}
+
+        {replies?.length > 0 && (
+          <ul style={{ marginTop: '1rem', paddingLeft: '1.5rem', borderLeft: '2px solid #ddd' }}>
+            {replies.map((reply) => (
+              <MessageItem key={reply._id} message={reply} replies={[]} onRefresh={onRefresh} />
+            ))}
+          </ul>
+        )}
+      </div>
     </li>
   );
 }

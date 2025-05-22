@@ -16,6 +16,6 @@ mongoose.connect("mongodb://localhost:27017/organizasso", {
   });
 
   await admin.save();
-  console.log("✅ Admin créé avec succès !");
+  console.log("Admin créé avec succès !");
   mongoose.disconnect();
-}).catch(err => console.error("❌ Erreur MongoDB :", err));
+}).catch(err => console.error("Erreur MongoDB :", err));

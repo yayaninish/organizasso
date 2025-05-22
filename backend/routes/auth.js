@@ -6,7 +6,7 @@ const User = require("../models/User");
 const router = express.Router();
 const JWT_SECRET = "organiz_secret";
 
-// 🔐 Inscription
+// Inscription
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// 🔑 Connexion
+// Connexion
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 

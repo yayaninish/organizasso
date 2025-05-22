@@ -42,12 +42,13 @@ function Forum() {
 
   return (
     <div className="container">
-      <h2>Forum public</h2>
-      {error && <p>{error}</p>}
+      
+      <MessageForm onPost={fetchMessages} />
 
+      {error && <p>{error}</p>}
       <input
         type="text"
-        placeholder="Rechercher un mot-clé..."
+        placeholder="Rechercher un mot-clé, auteur, ..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{ marginBottom: '1rem', width: '100%', padding: '0.5rem' }}
@@ -55,8 +56,7 @@ function Forum() {
 
       <MessageList messages={filteredMessages} onRefresh={fetchMessages} />
 
-      <h3>Poster un message</h3>
-      <MessageForm onPost={fetchMessages} />
+
     </div>
   );
 }

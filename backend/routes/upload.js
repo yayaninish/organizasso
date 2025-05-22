@@ -7,7 +7,7 @@ const User = require("../models/User");
 const router = express.Router();
 const JWT_SECRET = "organiz_secret";
 
-// Middleware d'authentification
+// fonction d'authentification
 function isAuthenticated(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json("Token manquant");
@@ -21,7 +21,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-// 📁 Stockage avec multer
+// Stockage avec multer
 const storage = multer.diskStorage({
   destination: "uploads/avatars/",
   filename: (req, file, cb) => {
@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// 📤 Route POST avatar
+// Route POST avatar
 router.post("/avatar", isAuthenticated, upload.single("avatar"), async (req, res) => {
   try {
     const path = `/uploads/avatars/${req.file.filename}`;

@@ -4,7 +4,7 @@ const Message = require("../models/Message");
 
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "organiz_secret"; // à placer dans un .env
+const JWT_SECRET = "organiz_secret";
 
 function isAuthenticated(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
@@ -18,7 +18,7 @@ function isAuthenticated(req, res, next) {
     return res.status(401).json("Token invalide");
   }
 }
-// 🔍 Route publique pour consulter un profil utilisateur
+// Route publique pour consulter un profil utilisateur
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("username role avatar");

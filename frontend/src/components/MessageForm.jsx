@@ -22,7 +22,7 @@ function MessageForm({ parentId = null, onPost, isPrivate = false }) {
         body: JSON.stringify({
           content,
           parentId,
-          isPrivate: isPrivate || false // ✅ c’est ici que ça compte
+          isPrivate: isPrivate || false // c’est ici que ça compte
         })
       });
 
@@ -30,7 +30,7 @@ function MessageForm({ parentId = null, onPost, isPrivate = false }) {
 
       setContent('');
       setError('');
-      onPost(); // ✅ recharge les messages
+      onPost(); // recharge les messages
     } catch (err) {
       setError("Impossible d’envoyer le message.");
     }
